@@ -11,25 +11,32 @@ import numpy as np
 class artificial_pulsar(object):
     
     def __init__(self, xi, P, error_list=[1]):
+        # start by initializing the object variables
+        self.xi_clock = None
+        self.P_pulse = None
+        self.clock_error_include = None
+        #---------------------------------------#
         
-        xi_clock= xi /np.sqrt(P) # xi (average timing error for 1 s) averaged to pulse period which could be smaller
+        # Now actually give them their values
+        self.xi_clock= xi /np.sqrt(P) # xi (average timing error for 1 s) averaged to pulse period which could be smaller
         
-        P_pulse = P # pulse period
+        self.P_pulse = P # pulse period
         
-        clock_error_include = error_list[0]
+        self.clock_error_include = error_list[0]
         
     def emit(self):
         
         deltat=0
-        if clock_error_include:
-            deltat += self.clock_error()
+        if self.clock_error_include:
+            deltat += self.clock_error() # for first pulse emitted
+            deltat += self.clock_error() # for second pulse emitted
         
-        t_emit = deltat
+        deltat_emit = deltat
         
-        return t_emit
+        return deltat_emit
     
     def clock_error(self):
-        return np.random.random(std=xi_clock)*P_pulse
+        return np.random.random(std=self.xi_clock)*self.P_pulse
     
     
     
